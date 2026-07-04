@@ -2,128 +2,341 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
 body {
-    background-color: #0f111a;
+    background-color: #0b0a21;
     color: #ffffff;
-    height: 100vh;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* BRANDING HEADER SYSTEM */
+.global-header {
+    position: absolute;
+    top: 30px;
+    left: 40px;
+    z-index: 10;
+}
+
+.logo-box {
+    background-color: #ffffff;
+    color: #000000;
+    font-weight: 800;
+    padding: 6px 14px;
+    font-size: 1.5rem;
+    border-radius: 4px;
+    letter-spacing: -0.5px;
+}
+
+.sub-logo {
+    display: block;
+    font-size: 0.75rem;
+    color: #a5a4bf;
+    margin-top: 15px;
+    font-weight: 600;
+}
+
+/* INTERFACE NAVIGATION VIEW PANELS */
+.view-panel {
+    display: none;
+    min-height: 100vh;
+    width: 100vw;
+    padding: 120px 60px 40px 60px;
+}
+
+.view-panel.active {
     display: flex;
-    justify-content: center;
     align-items: center;
 }
 
-.dashboard-container {
+.split-layout {
     display: flex;
-    width: 95vw;
-    height: 90vh;
-    background: #161925;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-}
-
-/* Sidebar Styling */
-.sidebar {
-    width: 300px;
-    background: #1f2335;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    border-right: 1px solid #2e3440;
-}
-
-.control-group h3 {
-    font-size: 0.9rem;
-    color: #7aa2f7;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.btn {
     width: 100%;
-    padding: 12px;
-    margin-bottom: 8px;
-    background: #24283b;
-    border: 1px solid #414868;
-    color: white;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: center;
+    gap: 60px;
+}
+
+.text-right-layout {
+    flex-direction: row;
+}
+
+.hero-text-side {
+    flex: 1.2;
+}
+
+.hero-graphic-side {
+    flex: 0.8;
+    display: flex;
+    justify-content: center;
+}
+
+/* TYPOGRAPHY */
+h1 {
+    font-size: 3.5rem;
+    line-height: 1.15;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.hero-desc {
+    font-size: 1.4rem;
+    line-height: 1.4;
+    color: #fefefe;
+    max-width: 540px;
+    margin-bottom: 40px;
+    font-weight: 500;
+}
+
+/* BUTTON CONTROLS KIT */
+.btn {
+    padding: 10px 24px;
+    font-size: 1.1rem;
+    font-weight: 700;
     border-radius: 6px;
     cursor: pointer;
-    font-weight: bold;
-    transition: all 0.2s ease;
+    border: none;
+    transition: transform 0.1s ease, opacity 0.2s ease;
 }
 
-.btn:hover, .btn.active {
-    background: #7aa2f7;
-    border-color: #7aa2f7;
-    color: #1f2335;
+.btn:active { transform: scale(0.97); }
+
+.btn-white {
+    background-color: #ffffff;
+    color: #0b0a21;
 }
 
-.upgrade-btn {
-    background: #ff007c;
-    border-color: #ff007c;
-}
-.upgrade-btn:hover {
-    background: #ff409f;
-    color: white;
+.btn-magenta {
+    background-color: #d100b2;
+    color: #ffffff;
 }
 
-#timer {
-    font-family: monospace;
-    font-size: 1.2rem;
-    color: #e0af68;
-    background: #24283b;
-    padding: 10px;
-    text-align: center;
-    border-radius: 4px;
+.outline-btn {
+    background: transparent;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    min-width: 75px;
+    padding: 6px 12px;
 }
 
-/* Emulator Screen View */
-.emulator-view {
-    flex: 1;
+.outline-btn.active {
+    background-color: #ffffff;
+    color: #0b0a21;
+}
+
+.cta-row {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: #0f111a;
-    padding: 20px;
+    gap: 20px;
 }
 
-.screen-wrapper {
-    width: 360px; /* Standard phone aspect ratio */
-    height: 740px;
-    background: #000;
-    border: 12px solid #2e3440;
-    border-radius: 36px;
+.top-nav-actions {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    display: flex;
+    gap: 15px;
+    z-index: 10;
+}
+
+.small-btn {
+    padding: 8px 18px;
+    font-size: 0.95rem;
+}
+
+/* PHONE HARDWARE CORE SHELL */
+.phone-frame {
+    width: 310px;
+    height: 620px;
+    background-color: #000000;
+    border: 3px solid #737282;
+    border-radius: 24px;
     overflow: hidden;
-    display: flex;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
 }
 
-#emulator-stream {
+.mock-img {
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #222;
-    transition: filter 0.3s ease;
+    object-fit: cover;
 }
 
-/* Simulating connection visual degradation */
-.lte-mode { filter: blur(1px) contrast(90%); }
-.fiveg-mode { filter: none; }
-.wifi-mode { filter: none; }
+#emulator-video-container {
+    width: 100%;
+    height: 100%;
+    background-color: #111;
+    object-fit: contain;
+}
 
-.placeholder-text {
-    color: #565f89;
+.loader-overlay {
+    position: absolute;
+    top:0; left:0; width:100%; height:100%;
+    background: rgba(11,10,33,0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    color: #a5a4bf;
+    text-align: center;
+    padding: 20px;
+    transition: opacity 0.4s ease;
+}
+
+/* CONFIGURATION ENGINE STYLING */
+.control-panel-card {
+    background: transparent;
+    border: 3px solid #ffffff;
+    border-radius: 24px;
+    padding: 40px;
+    width: 100%;
+    max-width: 480px;
+}
+
+.config-block {
+    margin-bottom: 25px;
+}
+
+.config-block h3 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.option-row {
+    display: flex;
+    gap: 12px;
+}
+
+.select-wrapper select {
+    width: 100%;
+    background: transparent;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    padding: 8px 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 6px;
+    outline: none;
+}
+
+.select-wrapper select option {
+    background-color: #0b0a21;
+    color: #ffffff;
+}
+
+/* AUDIO SLIDER styling */
+.slider-container input[type="range"] {
+    width: 100%;
+    accent-color: #ffffff;
+}
+
+/* APP MANAGEMENT BOX */
+.app-drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-size: 1.1rem;
 }
 
-.status-bar {
-    margin-top: 15px;
-    color: #565f89;
-    font-size: 0.85rem;
+.add-app-trigger {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 1.1rem;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.expand-label {
+    color: #a5a4bf;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+#installed-apps-list {
+    margin-top: 10px;
+    padding-left: 20px;
+    font-family: monospace;
+    color: #a5a4bf;
+}
+
+.hidden-drawer { display: none; }
+
+.restart-disclaimer {
+    text-align: center;
+    color: #737282;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 30px;
+}
+
+/* SIGN IN SECURITY MODAL CARD */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top:0; left:0; width:100vw; height:100vh;
+    background: rgba(5, 4, 15, 0.9);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-overlay.open { display: flex; }
+
+.auth-card {
+    border: 3px solid #ffffff;
+    border-radius: 24px;
+    padding: 40px;
+    width: 100%;
+    max-width: 440px;
+    background: #0b0a21;
+}
+
+.auth-card h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+}
+
+.input-group {
+    margin-bottom: 25px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.input-group input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid #ffffff;
+    color: #ffffff;
+    font-size: 1.2rem;
+    padding: 5px 0;
+    outline: none;
+}
+
+.auth-footer-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+}
+
+.auth-footer-links a {
+    color: #ffffff;
+    font-size: 1rem;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.submit-auth {
+    padding: 6px 20px;
 }
