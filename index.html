@@ -3,45 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloud Android Emulator Dashboard</title>
+    <title>Android Emulator Online | Cloud GitHub Edition</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="dashboard-container">
-        <aside class="sidebar">
-            <h2>Emulator Controls</h2>
-            
-            <div class="control-group">
-                <h3>Connection Profile</h3>
-                <button class="btn profile-btn active" onclick="setProfile('WiFi')">Wi-Fi (120Hz)</button>
-                <button class="btn profile-btn" onclick="setProfile('5G')">5G (60Hz)</button>
-                <button class="btn profile-btn" onclick="setProfile('LTE')">LTE (24Hz)</button>
-            </div>
+    <header class="global-header">
+        <div class="logo-area">
+            <span class="logo-box">androidlogo</span>
+            <span class="sub-logo">Cloud GitHub edition</span>
+        </div>
+    </header>
 
-            <div class="control-group">
-                <h3>Session Status</h3>
-                <div id="timer">Time Remaining: 08:00:00</div>
-                <p class="tier-badge free">Free Tier Account</p>
-            </div>
-
-            <div class="control-group pricing-promo">
-                <h3>Upgrade to Premium</h3>
-                <p>Remove limits, unlock Android 17 Beta, & multiple devices.</p>
-                <button class="btn upgrade-btn">$20 / 6 Months</button>
-            </div>
-        </aside>
-
-        <main class="emulator-view">
-            <div class="screen-wrapper">
-                <div id="emulator-stream" class="wifi-mode">
-                    <div class="placeholder-text">Android Emulator Stream</div>
+    <div id="landing-screen" class="view-panel active">
+        <div class="split-layout">
+            <div class="hero-text-side">
+                <h1>Android Emulator<br>Online</h1>
+                <p class="hero-desc">
+                    Run Android online for free. You could get up to 8 hours of the Android Emulator when signing up. No costs, No fees, just pure experience without interruptions.
+                </p>
+                <div class="cta-row">
+                    <button class="btn btn-white" onclick="showScreen('config-screen')">Start a plan</button>
+                    <button class="btn btn-white" onclick="openSignIn()">Sign up</button>
                 </div>
             </div>
-            <div class="status-bar">
-                Display Output: <span id="current-hz">120Hz</span>
+            <div class="hero-graphic-side">
+                <div class="phone-frame mock-static">
+                    <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?q=80&w=600" alt="Android Interface Preview" class="mock-img">
+                </div>
             </div>
-        </main>
+        </div>
+        <div class="top-nav-actions">
+            <button class="btn btn-white small-btn" onclick="showScreen('config-screen')">Use as a guest</button>
+            <button class="btn btn-magenta small-btn" onclick="openSignIn()">Sign in</button>
+        </div>
+    </div>
+
+    <div id="signin-modal" class="modal-overlay">
+        <div class="auth-card">
+            <h2>Sign in</h2>
+            <form id="loginForm" onsubmit="handleSignIn(event)">
+                <div class="input-group">
+                    <label>Email</label>
+                    <input type="email" id="userEmail" required autocomplete="off">
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="userPassword" required>
+                </div>
+                <div class="auth-footer-links">
+                    <a href="#" onclick="alert('Account creation framework ready!')">Create account</a>
+                    <button type="submit" class="btn btn-white submit-auth">Sign in</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="config-screen" class="view-panel">
+        <div class="split-layout text-right-layout">
+            
+            <div class="hero-graphic-side">
+                <div class="phone-frame streaming-active">
+                    <video id="emulator-video-container" autoplay playsinline></video>
+                    <div id="stream-loader" class="loader-overlay">Connecting to cloud system...</div>
+                </div>
+            </div>
+
+            <div class="hero-text-side control-panel-card">
+                
+                <div class="config-block">
+                    <h3>RAM</h3>
+                    <div class="option-row">
+                        <button class="btn outline-btn ram-btn active" onclick="setRAM('4GB')">4GB</button>
+                        <button class="btn outline-btn ram-btn" onclick="setRAM('6GB')">6GB</button>
+                        <button class="btn outline-btn ram-btn" onclick="setRAM('8GB')">8GB</button>
+                    </div>
+                </div>
+
+                <div class="config-block">
+                    <h3>Storage</h3>
+                    <div class="option-row">
+                        <button class="btn outline-btn storage-btn active" onclick="setStorage('32GB')">32GB</button>
+                        <button class="btn outline-btn storage-btn" onclick="setStorage('64GB')">64GB</button>
+                        <button class="btn outline-btn storage-btn" onclick="setStorage('128GB')">128GB</button>
+                    </div>
+                </div>
+
+                <div class="config-block">
+                    <h3>Version</h3>
+                    <div class="select-wrapper">
+                        <select id="android-version-picker" onchange="setAndroidVersion(this.value)">
+                            <option value="Balava - Android 16">Balava - Android 16</option>
+                            <option value="Vanilla - Android 15">Vanilla - Android 15</option>
+                            <option value="UpsideDown - Android 14">UpsideDown - Android 14</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="config-block">
+                    <h3>System Volume</h3>
+                    <div class="slider-container">
+                        <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.5" oninput="changeVolume(this.value)">
+                    </div>
+                </div>
+
+                <div class="config-block">
+                    <h3>Test apps</h3>
+                    <div class="app-drawer-header">
+                        <button class="add-app-trigger" onclick="addTestApp()">+ Add app</button>
+                        <span class="expand-label" onclick="toggleAppDrawerList()">v Expand</span>
+                    </div>
+                    <ul id="installed-apps-list" class="hidden-drawer"></ul>
+                </div>
+
+                <p class="restart-disclaimer">The emulator must be restarted in order to take changes</p>
+            </div>
+
+        </div>
     </div>
 
     <script src="app.js"></script>
