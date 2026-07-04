@@ -1,1 +1,49 @@
-o
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Android Emulator Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <h2>Emulator Controls</h2>
+            
+            <div class="control-group">
+                <h3>Connection Profile</h3>
+                <button class="btn profile-btn active" onclick="setProfile('WiFi')">Wi-Fi (120Hz)</button>
+                <button class="btn profile-btn" onclick="setProfile('5G')">5G (60Hz)</button>
+                <button class="btn profile-btn" onclick="setProfile('LTE')">LTE (24Hz)</button>
+            </div>
+
+            <div class="control-group">
+                <h3>Session Status</h3>
+                <div id="timer">Time Remaining: 08:00:00</div>
+                <p class="tier-badge free">Free Tier Account</p>
+            </div>
+
+            <div class="control-group pricing-promo">
+                <h3>Upgrade to Premium</h3>
+                <p>Remove limits, unlock Android 17 Beta, & multiple devices.</p>
+                <button class="btn upgrade-btn">$20 / 6 Months</button>
+            </div>
+        </aside>
+
+        <main class="emulator-view">
+            <div class="screen-wrapper">
+                <div id="emulator-stream" class="wifi-mode">
+                    <div class="placeholder-text">Android Emulator Stream</div>
+                </div>
+            </div>
+            <div class="status-bar">
+                Display Output: <span id="current-hz">120Hz</span>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
