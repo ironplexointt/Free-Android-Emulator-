@@ -3,12 +3,9 @@ let profileState = {
     isUserVerified: false,
     hardwareRAM: '4GB',
     hardwareStorage: '32GB',
-    systemOS: 'Balava - Android 16',
+    systemOS: 'Android 17',
     packageQueue: []
 };
-
-let webRTCPeer = null;
-let commandChannel = null;
 
 // --- INITIAL ENGINE TRIGGER ---
 document.addEventListener("DOMContentLoaded", () => {
@@ -24,9 +21,9 @@ function showScreen(screenId) {
         target.classList.add('active');
     }
     
-    // Automatically trigger WebRTC pipelines if user lands on workspace console
+    // Automatically execute baseline boot procedure on layout activation
     if (screenId === 'config-screen') {
-        connectToEmulatorStream();
+        requestEmulatorReboot();
     }
 }
 
@@ -58,14 +55,11 @@ function setStorage(capacity) {
 function setAndroidVersion(versionLabel) {
     profileState.systemOS = versionLabel;
     saveCachedProfile();
-    console.warn("Target architecture updated. System restart sequence required.");
+    console.log(`State variation targeted: ${versionLabel}`);
 }
 
 function changeVolume(level) {
-    const videoTarget = document.getElementById('emulator-video-container');
-    if (videoTarget) {
-        videoTarget.volume = level;
-    }
+    console.log(`Hardware Volume updated to: ${level * 100}%`);
 }
 
 // --- TEST APP QUEUE SYSTEM ---
@@ -85,12 +79,42 @@ function toggleAppDrawerList() {
 
 function renderAppDrawerUI() {
     const targetList = document.getElementById('installed-apps-list');
+    if(!targetList) return;
     targetList.innerHTML = "";
     profileState.packageQueue.forEach(app => {
         const item = document.createElement('li');
         item.innerText = app;
         targetList.appendChild(item);
     });
+}
+
+// --- CORE REBOOT ROUTER METHOD ---
+function requestEmulatorReboot() {
+    const iframe = document.getElementById('emulator-frame');
+    const loadingBlock = document.getElementById('stream-loader');
+    if (!iframe) return;
+
+    // Show processing panel interface overlay
+    if (loadingBlock) {
+        loadingBlock.style.opacity = '1';
+        loadingBlock.innerText = `Booting ${profileState.systemOS} (${profileState.hardwareRAM} RAM / ${profileState.hardwareStorage} Storage)...`;
+    }
+
+    // Mapping architectural targets to unique Docker background port assignments
+    const versionPorts = {
+        "Android 17": "8000", "Android 16": "8001", "Android 15": "8002",
+        "Android 14": "8003", "Android 13": "8004", "Android 12": "8005",
+        "Android 11": "8006", "Android 10": "8007", "Android 9": "8008", "Android 8": "8009"
+    };
+
+    const targetPort = versionPorts[profileState.systemOS] || "8000";
+
+    // Simulate backend lifecycle delay to switch the active iframe interface
+    setTimeout(() => {
+        // Pointing dynamically to the targeted local container port
+        iframe.src = `http://localhost:${targetPort}`;
+        if (loadingBlock) loadingBlock.style.opacity = '0';
+    }, 1800);
 }
 
 // --- PERSISTENCE UTILITIES ---
@@ -123,64 +147,4 @@ function syncUserInterface() {
     if(versionPicker) versionPicker.value = profileState.systemOS;
     
     renderAppDrawerUI();
-}
-
-// --- INTERACTIVE WebRTC AUDIO & VIDEO CONTROLLER ---
-async function connectToEmulatorStream() {
-    const videoViewport = document.getElementById('emulator-video-container');
-    const loadingBlock = document.getElementById('stream-loader');
-    if (!videoViewport) return;
-
-    // Direct endpoint connection to your background WebRTC server instance
-    const STREAM_ROUTER_URL = "https://your-backend-server-ip:80e0/v1/stream";
-
-    try {
-        webRTCPeer = new RTCPeerConnection({
-            iceServers: [{ urls: "stun:stun.l.google.com:19302" }]
-        });
-
-        // Capture incoming unmuted hardware signals directly
-        webRTCPeer.ontrack = (streamEvent) => {
-            if (videoViewport.srcObject !== streamEvent.streams[0]) {
-                videoViewport.srcObject = streamEvent.streams[0];
-                if(loadingBlock) loadingBlock.style.opacity = '0'; 
-                console.log("Hardware A/V streaming stream bound.");
-            }
-        };
-
-        commandChannel = webRTCPeer.createDataChannel("input-events");
-        attachInputPositionMapping(videoViewport);
-
-        const internalOffer = await webRTCPeer.createOffer();
-        await webRTCPeer.setLocalDescription(internalOffer);
-
-        const signalRoute = await fetch(STREAM_ROUTER_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ sdp: internalOffer.sdp, type: internalOffer.type })
-        });
-
-        const remoteResolution = await signalRoute.json();
-        await webRTCPeer.setRemoteDescription(new RTCSessionDescription(remoteResolution));
-
-    } catch (failureContext) {
-        console.error("Signaling handshake breakdown: ", failureContext);
-        if(loadingBlock) loadingBlock.innerText = "Stream offline. Check backend service.";
-    }
-}
-
-function attachInputPositionMapping(surfaceElement) {
-    surfaceElement.addEventListener('mousedown', (clickContext) => {
-        if (!commandChannel || commandChannel.readyState !== "open") return;
-
-        const bounds = surfaceElement.getBoundingClientRect();
-        const horizontalOffset = (clickContext.clientX - bounds.left) / bounds.width;
-        const verticalOffset = (clickContext.clientY - bounds.top) / bounds.height;
-
-        commandChannel.send(JSON.stringify({
-            type: "pointerdown",
-            x: horizontalOffset,
-            y: verticalOffset
-        }));
-    });
 }
