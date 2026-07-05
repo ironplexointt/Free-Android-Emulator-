@@ -92,16 +92,27 @@ function renderAppDrawerUI() {
 // --- CORE REBOOT ROUTER METHOD ---
 function requestEmulatorReboot() {
     const iframe = document.getElementById('emulator-frame');
+    function requestEmulatorReboot() {
+    const iframe = document.getElementById('emulator-frame');
     const loadingBlock = document.getElementById('stream-loader');
     if (!iframe) return;
 
-    // Show processing panel interface overlay and ensure it is visible at boot start
     if (loadingBlock) {
         loadingBlock.style.display = 'flex';
         loadingBlock.style.opacity = '1';
-        loadingBlock.innerText = `Booting ${profileState.systemOS} (${profileState.hardwareRAM} RAM / ${profileState.hardwareStorage} Storage)...`;
+        loadingBlock.innerText = `Booting up...`;
     }
 
+    setTimeout(() => {
+        // This forces a live web preview straight into your layout to test it
+        iframe.src = "https://bing.com";
+        
+        if (loadingBlock) {
+            loadingBlock.style.opacity = '0';
+            loadingBlock.style.display = 'none'; // This completely removes the text layer
+        }
+    }, 1800);
+}
     // Mapping architectural targets to unique Docker background port assignments
     const versionPorts = {
         "Android 17": "8000", "Android 16": "8001", "Android 15": "8002",
