@@ -46,6 +46,7 @@ function setRAM(size) {
     saveCachedProfile();
 }
 
+// Fixed storage values matching custom request
 function setStorage(capacity) {
     profileState.hardwareStorage = capacity;
     toggleActiveElementIndicator('storage-btn', capacity);
@@ -94,8 +95,9 @@ function requestEmulatorReboot() {
     const loadingBlock = document.getElementById('stream-loader');
     if (!iframe) return;
 
-    // Show processing panel interface overlay
+    // Show processing panel interface overlay and ensure it is visible at boot start
     if (loadingBlock) {
+        loadingBlock.style.display = 'flex';
         loadingBlock.style.opacity = '1';
         loadingBlock.innerText = `Booting ${profileState.systemOS} (${profileState.hardwareRAM} RAM / ${profileState.hardwareStorage} Storage)...`;
     }
@@ -113,7 +115,12 @@ function requestEmulatorReboot() {
     setTimeout(() => {
         // Pointing dynamically to the targeted local container port
         iframe.src = `http://localhost:${targetPort}`;
-        if (loadingBlock) loadingBlock.style.opacity = '0';
+        
+        // Hide the blocking loader screen completely once the stream loads
+        if (loadingBlock) {
+            loadingBlock.style.opacity = '0';
+            loadingBlock.style.display = 'none';
+        }
     }, 1800);
 }
 
@@ -122,6 +129,7 @@ function saveCachedProfile() {
     localStorage.setItem('cloudDeviceConfig', JSON.stringify(profileState));
 }
 
+// Load configurations safely from historical browser caching
 function loadCachedProfile() {
     const cache = localStorage.getItem('cloudDeviceConfig');
     if (cache) {
